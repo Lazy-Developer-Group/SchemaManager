@@ -1,0 +1,1 @@
+This is a tool to allow rollforward / rollback scripts to be automatically applied to a database using MSBuild to specify target revision.
