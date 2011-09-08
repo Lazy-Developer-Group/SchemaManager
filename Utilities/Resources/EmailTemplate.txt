@@ -1,0 +1,62 @@
+﻿<html>
+<head>
+<title>$TITLE$</title>
+<style type="text/css">
+	body {
+		background: #ffffff;
+		color: #333333;
+		font: normal 9pt Verdana, Geneva, Arial, Helvetica, sans-serif;
+		margin: 0px;
+		padding: 0px;
+		padding: 5px;
+	}
+	.searchTable {
+		font-weight: normal;
+		border-collapse: collapse;
+		border: 1px solid #B8C9D9;
+	}
+	.searchTable .label {
+		 background: #D7E8F8;
+		 width:200px;
+		 text-align:right;
+		 font-weight: bold;
+		 border: 1px solid;
+	}
+	.searchTable TD {
+		 padding: 3px;
+		 text-align:left;
+		 border: 1px solid;
+		 height:25px;
+	}
+	.gridReport { 
+		font-weight: normal;
+		padding: 10px;
+		width: 100%;
+		border-collapse: collapse;
+		border: none;
+		text-align: center;
+	}
+	.gridReport TD { 
+		border-top: 1px solid #bbb; 
+		border-left: 1px solid #ccc; 
+		border-right: 1px solid #ccc;
+		padding: 3px;
+	}	
+	.gridReport TH { 	
+		position: relative;
+		vertical-align: top;
+		background: #336699; 	
+		color: #efefef;
+		padding: 5px;
+	}
+	.gridReport .rowcolor1 { background: #FFFFFF; }
+	.gridReport .rowcolor2 { background: #D7E8F8; }	
+</style>
+</head>
+
+<body>
+
+$BODY$
+
+</body>
+</html>
