@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaManager", "SchemaManager\SchemaManager.csproj", "{C61C9CF5-DB91-48D4-92E0-BED94CE12922}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaManager.Tests", "SchemaManager.Tests\SchemaManager.Tests.csproj", "{7ECD8097-2D47-4895-9053-0AD1B8D7771A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{9A447803-61D2-4BA8-8D74-1948543827E0}"
+	ProjectSection(SolutionItems) = preProject
+		References\Microsoft.Build.Framework.dll = References\Microsoft.Build.Framework.dll
+		References\Microsoft.Build.Framework.xml = References\Microsoft.Build.Framework.xml
+		References\Microsoft.Build.Utilities.dll = References\Microsoft.Build.Utilities.dll
+		References\nunit.framework.dll = References\nunit.framework.dll
+		References\nunit.framework.xml = References\nunit.framework.xml
+		References\Utilities.dll = References\Utilities.dll
+		References\Utilities.Testing.dll = References\Utilities.Testing.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C61C9CF5-DB91-48D4-92E0-BED94CE12922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61C9CF5-DB91-48D4-92E0-BED94CE12922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61C9CF5-DB91-48D4-92E0-BED94CE12922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61C9CF5-DB91-48D4-92E0-BED94CE12922}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ECD8097-2D47-4895-9053-0AD1B8D7771A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ECD8097-2D47-4895-9053-0AD1B8D7771A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ECD8097-2D47-4895-9053-0AD1B8D7771A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ECD8097-2D47-4895-9053-0AD1B8D7771A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
