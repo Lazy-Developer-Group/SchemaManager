@@ -3,9 +3,9 @@ using System.IO;
 using NUnit.Framework;
 using SchemaManager.Core;
 using Moq;
-using Utilities.Data;
 using Utilities.General;
 using Utilities.Testing;
+using Utilities.Data;
 
 namespace SchemaManager.Tests.Core
 {
