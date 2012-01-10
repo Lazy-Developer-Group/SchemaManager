@@ -22,6 +22,8 @@ namespace SchemaManager.Update
 
 		public void ApplyUpdates()
 		{
+			_logger.Info("Database is currently at version {0}.", _database.Revision);
+
 			if (_targetVersion == DatabaseVersion.Max)
 			{
 				_logger.Info("Applying all available updates to database...");
