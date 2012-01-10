@@ -4,7 +4,8 @@ using SchemaManager.Core;
 using SchemaManager.Databases;
 using SchemaManager.Rollback;
 using Moq;
-using Utilities.Testing;
+using StructureMap;
+using SpecsFor;
 
 namespace SchemaManager.Tests.Rollback
 {
@@ -90,11 +91,11 @@ namespace SchemaManager.Tests.Rollback
 		{
 			public abstract class the_default_state : SpecsFor<DatabaseReverter>
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
-					kernel.Bind<DatabaseVersion>().ToConstant(new DatabaseVersion(0, 0));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0)));
 				}
 
 				protected override void Given()
@@ -143,12 +144,12 @@ namespace SchemaManager.Tests.Rollback
 
 			public abstract class there_are_rollbacks_available_for_a_current_database : there_are_rollbacks_available
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(StructureMap.IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
-					kernel.Unbind<DatabaseVersion>();
-					kernel.Bind<DatabaseVersion>().ToConstant(new DatabaseVersion(1, 0));
+					container.Model.EjectAndRemove(typeof(DatabaseVersion));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(1, 0)));
 				}
 
 				protected override void Given()

@@ -3,10 +3,12 @@ using System.IO;
 using NUnit.Framework;
 using SchemaManager.ChangeProviders;
 using SchemaManager.Core;
+using SchemaManager.Tests.Helpers;
 using Should;
-using Utilities.Testing;
+using StructureMap;
 using System.Linq;
 using Utilities.General;
+using SpecsFor;
 
 namespace SchemaManager.Tests.ChangeProviders
 {
@@ -85,9 +87,9 @@ namespace SchemaManager.Tests.ChangeProviders
 		{
 			public abstract class the_default_state : SpecsFor<FileSystemSchemaChangeProvider>
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
 					var testScriptPath = "ChangeScripts";
 
@@ -97,7 +99,7 @@ namespace SchemaManager.Tests.ChangeProviders
 						testScriptPath = @"TestChangeScripts\ChangeScripts";
 					}
 
-					kernel.Bind<FileSystemSchemaChangeProvider>().ToMethod(ctx => new FileSystemSchemaChangeProvider(testScriptPath));
+					container.Configure(cfg => cfg.For<FileSystemSchemaChangeProvider>().Use(ctx => new FileSystemSchemaChangeProvider(testScriptPath)));
 				}
 			}
 		}

@@ -3,9 +3,10 @@ using System.IO;
 using NUnit.Framework;
 using SchemaManager.Core;
 using Moq;
+using StructureMap;
 using Utilities.General;
-using Utilities.Testing;
 using Utilities.Data;
+using SpecsFor;
 
 namespace SchemaManager.Tests.Core
 {
@@ -88,12 +89,12 @@ namespace SchemaManager.Tests.Core
 				protected string ForwardScript = "Forward.sql";
 				protected string BackScript = "Back.sql";
 
-				protected override void BeforeEachSpec()
+				public override void SetupEachSpec()
 				{
-					base.BeforeEachSpec();
-
 					File.WriteAllText(ForwardScript, ResourceHelper.GetResourceAsString(typeof(given), typeof(given).Namespace, TestScript));
 					File.WriteAllText(BackScript, ResourceHelper.GetResourceAsString(typeof(given), typeof(given).Namespace, TestScript));
+					
+					base.SetupEachSpec();
 				}
 
 				protected override void AfterEachSpec()
@@ -111,11 +112,11 @@ namespace SchemaManager.Tests.Core
 					}
 				}
 
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
-					kernel.Bind<SchemaChange>().ToConstant(new SchemaChange(Directory.GetCurrentDirectory(), new DatabaseVersion(), new DatabaseVersion()));
+					container.Configure(cfg => cfg.For<SchemaChange>().Use(new SchemaChange(Directory.GetCurrentDirectory(), new DatabaseVersion(), new DatabaseVersion())));
 				}
 
 				protected override void Given()
@@ -134,10 +135,10 @@ namespace SchemaManager.Tests.Core
 
 			public abstract class the_update_contains_multiple_statements : the_default_state 
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				public override void SetupEachSpec()
 				{
 					TestScript = "MultipleBatches.sql";
-					base.ConfigureKernel(kernel);
+					base.SetupEachSpec();
 				}
 			}
 		}

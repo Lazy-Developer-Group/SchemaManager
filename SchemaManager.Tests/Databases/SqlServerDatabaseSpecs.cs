@@ -2,10 +2,10 @@ using System.Configuration;
 using NUnit.Framework;
 using SchemaManager.Core;
 using SchemaManager.Databases;
+using SchemaManager.Tests.Helpers;
 using Should;
 using Moq;
 using Utilities.Data;
-using Utilities.Testing;
 
 namespace SchemaManager.Tests.Databases
 {
@@ -108,7 +108,7 @@ namespace SchemaManager.Tests.Databases
 
 		public static class given
 		{
-			public abstract class the_default_state : SpecsFor<SqlServerDatabase>.WithDatabaseSupport
+			public abstract class the_default_state : SpecsForWithDatabase<SqlServerDatabase>
 			{
 				protected override string GetConnectionString()
 				{

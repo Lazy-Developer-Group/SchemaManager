@@ -1,8 +1,10 @@
 using System;
 using NUnit.Framework;
 using SchemaManager.Core;
-using Utilities.Testing;
+using SchemaManager.Tests.Helpers;
+using StructureMap;
 using Should;
+using SpecsFor;
 
 namespace SchemaManager.Tests.Core
 {
@@ -183,11 +185,11 @@ namespace SchemaManager.Tests.Core
 		{
 			public abstract class the_default_state : SpecsFor<DatabaseVersion>
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(IContainer container)
 				{
-					kernel.Bind<DatabaseVersion>().ToConstant(new DatabaseVersion(1, 0));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(1, 0)));
 
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 				}
 			}
 		}

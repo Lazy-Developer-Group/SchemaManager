@@ -5,7 +5,7 @@ using SchemaManager.Core;
 using SchemaManager.Databases;
 using Should;
 using Moq;
-using Utilities.Testing;
+using SpecsFor;
 
 namespace SchemaManager.Tests.ChangeProviders
 {

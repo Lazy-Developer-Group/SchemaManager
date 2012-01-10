@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", 
 		References\Microsoft.Build.Framework.dll = References\Microsoft.Build.Framework.dll
 		References\Microsoft.Build.Framework.xml = References\Microsoft.Build.Framework.xml
 		References\Microsoft.Build.Utilities.dll = References\Microsoft.Build.Utilities.dll
-		References\nunit.framework.dll = References\nunit.framework.dll
-		References\nunit.framework.xml = References\nunit.framework.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{54AE9F4E-C96D-420D-82D6-0703EBEE90DF}"

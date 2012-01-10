@@ -4,7 +4,7 @@ using SchemaManager.Core;
 using Moq;
 using SchemaManager.Databases;
 using SchemaManager.Update;
-using Utilities.Testing;
+using SpecsFor;
 
 namespace SchemaManager.Tests.Update
 {
@@ -106,11 +106,11 @@ namespace SchemaManager.Tests.Update
 		{
 			public abstract class the_default_state : SpecsFor<DatabaseUpdater>
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(StructureMap.IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
-					kernel.Bind<DatabaseVersion>().ToConstant(DatabaseVersion.Max);
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(DatabaseVersion.Max));
 				}
 
 				protected override void Given()
@@ -171,12 +171,12 @@ namespace SchemaManager.Tests.Update
 
 			public abstract class the_target_revision_is_the_current_revision : there_are_updates_available_for_out_of_date_database
 			{
-				protected override void ConfigureKernel(Ninject.IKernel kernel)
+				protected override void ConfigureContainer(StructureMap.IContainer container)
 				{
-					base.ConfigureKernel(kernel);
+					base.ConfigureContainer(container);
 
-					kernel.Unbind<DatabaseVersion>();
-					kernel.Bind<DatabaseVersion>().ToConstant(new DatabaseVersion(0, 0));
+					container.Model.EjectAndRemove(typeof (DatabaseVersion));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0)));
 				}
 			}
 		}
