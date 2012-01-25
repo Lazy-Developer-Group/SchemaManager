@@ -59,6 +59,22 @@ namespace SchemaManager.Tests.Core
 		}
 
 		[TestFixture]
+		public class when_running_a_complex_update_with_lower_case_go : given.the_update_contains_multiple_statements_separated_with_lower_case_go
+		{
+			protected override void When()
+			{
+				SUT.Execute(GetMockFor<IDbContext>().Object);
+			}
+
+			[Test]
+			public void then_it_creates_a_command_for_each_batch()
+			{
+				GetMockFor<IDbContext>()
+					.Verify(c => c.CreateCommand(), Times.Exactly(3));
+			}
+		}
+
+		[TestFixture]
 		public class when_rolling_back_a_complex_change : given.the_update_contains_multiple_statements
 		{
 			protected override void When()
@@ -138,6 +154,15 @@ namespace SchemaManager.Tests.Core
 				public override void SetupEachSpec()
 				{
 					TestScript = "MultipleBatches.sql";
+					base.SetupEachSpec();
+				}
+			}
+
+			public class the_update_contains_multiple_statements_separated_with_lower_case_go : the_default_state
+			{
+				public override void SetupEachSpec()
+				{
+					TestScript = "MultipleBatchesWithLowerCaseGo.sql";
 					base.SetupEachSpec();
 				}
 			}

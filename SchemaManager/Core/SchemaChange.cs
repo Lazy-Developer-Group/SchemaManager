@@ -12,7 +12,7 @@ namespace SchemaManager.Core
 		private const string BackFile = "Back.sql";
 		private const string ForwardFile = "Forward.sql";
 
-		private static readonly Regex _batchSplitter = new Regex(@"^GO\W*$", RegexOptions.Multiline | RegexOptions.Compiled);
+		private static readonly Regex _batchSplitter = new Regex(@"^GO\W*$", RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 		public string PathToSchemaChangeFolder { get; private set; }
 		public DatabaseVersion Version { get; private set; }

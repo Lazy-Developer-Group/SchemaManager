@@ -99,6 +99,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Core\SingleBatch.sql" />
     <EmbeddedResource Include="Core\MultipleBatches.sql" />
+    <EmbeddedResource Include="Core\MultipleBatchesWithLowerCaseGo.sql" />
     <Content Include="CreateTestDatabase.sql" />
     <Content Include="TestChangeScripts\ChangeScripts\01.0\01.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
