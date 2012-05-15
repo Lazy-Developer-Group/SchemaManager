@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -40,6 +41,7 @@ namespace SchemaManager.Core
 			foreach (var sqlBatch in GetBatchesFrom(sqlScriptFile))
 			{
 				var command = context.CreateCommand();
+				command.CommandTimeout = (int)TimeSpan.FromMinutes(5).TotalSeconds;
 
 				command.CommandText = sqlBatch;
 
