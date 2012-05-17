@@ -1,4 +1,5 @@
-﻿using System.Transactions;
+﻿using System;
+using System.Transactions;
 using SchemaManager.Core;
 using Utilities.Data;
 
@@ -58,7 +59,7 @@ namespace SchemaManager.Databases
 
 		public void ExecuteUpdate(ISchemaChange schemaChange)
 		{
-			using (var transaction = new TransactionScope())
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
 			{
 				schemaChange.Execute(_context);
 

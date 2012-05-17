@@ -38,7 +38,9 @@ namespace SchemaManager.Infrastructure
 				}
 				catch (Exception ex)
 				{
-					Log.LogErrorFromException(ex);
+					Log.LogError("An error has occurred:");
+					Log.LogError(ex.ToString());
+					//Log.LogErrorFromException(ex);
 					return false;
 				}
 			}
