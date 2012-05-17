@@ -13,7 +13,7 @@ namespace SchemaManager.Core
 		private const string BackFile = "Back.sql";
 		private const string ForwardFile = "Forward.sql";
 
-		private static readonly Regex _batchSplitter = new Regex(@"^GO\W*$", RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+		private static readonly Regex _batchSplitter = new Regex(@"^GO\s*$", RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 		public string PathToSchemaChangeFolder { get; private set; }
 		public DatabaseVersion Version { get; private set; }
@@ -41,7 +41,8 @@ namespace SchemaManager.Core
 			foreach (var sqlBatch in GetBatchesFrom(sqlScriptFile))
 			{
 				var command = context.CreateCommand();
-				command.CommandTimeout = (int)TimeSpan.FromMinutes(5).TotalSeconds;
+				//TODO: Is this safe?  30 minutes is a heck of a timeout...
+				command.CommandTimeout = (int)TimeSpan.FromMinutes(30).TotalSeconds;
 
 				command.CommandText = sqlBatch;
 

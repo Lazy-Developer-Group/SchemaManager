@@ -97,6 +97,28 @@ namespace SchemaManager.Tests.Core
 			}
 		}
 
+		public class when_applying_an_update_that_contains_comments : given.the_update_contains_a_batch_that_begins_with_a_multi_line_comment
+		{
+			protected override void When()
+			{
+				SUT.Execute(GetMockFor<IDbContext>().Object);
+			}
+
+			[Test]
+			public void then_it_breaks_batches_with_multi_line_comments_correctly()
+			{
+				GetMockFor<IDbCommand>()
+					.VerifySet(c => c.CommandText = It.Is<string>(s => s.StartsWith("/* \r\nTesting")));
+			}
+
+			[Test]
+			public void then_it_breaks_batches_with_single_line_comments_correctly()
+			{
+				GetMockFor<IDbCommand>()
+					.VerifySet(c => c.CommandText = It.Is<string>(s => s.StartsWith("-- Testing")));
+			}
+		}
+
 		public static class given
 		{
 			public abstract class the_default_state : SpecsFor<SchemaChange>
@@ -158,11 +180,20 @@ namespace SchemaManager.Tests.Core
 				}
 			}
 
-			public class the_update_contains_multiple_statements_separated_with_lower_case_go : the_default_state
+			public abstract class the_update_contains_multiple_statements_separated_with_lower_case_go : the_default_state
 			{
 				public override void SetupEachSpec()
 				{
 					TestScript = "MultipleBatchesWithLowerCaseGo.sql";
+					base.SetupEachSpec();
+				}
+			}
+
+			public abstract class the_update_contains_a_batch_that_begins_with_a_multi_line_comment : the_default_state
+			{
+				public override void SetupEachSpec()
+				{
+					TestScript = "MultipleBatchesWithComments.sql";
 					base.SetupEachSpec();
 				}
 			}
