@@ -19,12 +19,12 @@ namespace SchemaManager.ChangeProviders
 		{
 			var changes = _provider.GetAllChanges();
 
-			var maxVersion = changes.Max(c => c.Version.MajorVersion);
+			var maxVersion = changes.Max(c => c.Version);
+
+			var baseVersion = new DatabaseVersion(maxVersion.MajorVersion, maxVersion.MinorVersion, maxVersion.PatchVersion, 0);
 
 			return from c in changes
-			       select c.Version.MajorVersion == maxVersion
-			              	? new ChangeDecorator(c)
-			              	: c;
+			       select c.Version >= baseVersion ? new ChangeDecorator(c) : c;
 		}
 
 		//This decoator is used to force all of the most recent major version's

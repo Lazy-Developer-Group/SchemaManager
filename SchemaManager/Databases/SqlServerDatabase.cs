@@ -33,7 +33,7 @@ namespace SchemaManager.Databases
 			{
 				using (var scope = new TransactionScope())
 				{
-					command.CommandText = "exec sp_addextendedproperty @name='DatabaseVersion', @value='1.0.0'";
+					command.CommandText = "exec sp_addextendedproperty @name='DatabaseVersion', @value='1.0.0.0'";
 					command.ExecuteNonQuery();
 
 					scope.Complete();
@@ -54,7 +54,7 @@ namespace SchemaManager.Databases
 
 			command.ExecuteNonQuery();
 
-			_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion);
+			_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
 		}
 
 		public void ExecuteUpdate(ISchemaChange schemaChange)

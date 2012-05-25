@@ -34,56 +34,71 @@ namespace SchemaManager.Core
 
 		public int CompareTo(DatabaseVersion otherVersion)
 		{
-			if (this.MajorVersion.CompareTo(otherVersion.MajorVersion) != 0)
+			var myPieces = new[] {MajorVersion, MinorVersion, PatchVersion, ScriptVersion};
+			var theirPieces = new[] { otherVersion.MajorVersion, otherVersion.MinorVersion, otherVersion.PatchVersion, otherVersion.ScriptVersion };
+
+			for (var i = 0; i < myPieces.Length; i++)
 			{
-				return this.MajorVersion.CompareTo(otherVersion.MajorVersion);
+				if (myPieces[i].CompareTo(theirPieces[i]) != 0)
+				{
+					return myPieces[i].CompareTo(theirPieces[i]);
+				}
 			}
 
-			return this.MinorVersion.CompareTo(otherVersion.MinorVersion);
+			return 0;
 		}
 
 		#endregion
 
-		public static readonly DatabaseVersion Max = new DatabaseVersion(double.MaxValue, double.MaxValue);
+		public static readonly DatabaseVersion Max = new DatabaseVersion(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
 
 		public static DatabaseVersion FromString(string value)
 		{
 			var pieces = value.Split('.');
 
-			if (pieces.Length < 2)
+			if (pieces.Length < 3)
 			{
-				throw new ArgumentException("The database version should be specified using format ##.##.##");
+				throw new ArgumentException("The database version should be specified using format ##.##.##.##");
 			}
 
-			var majorVersion = double.Parse(string.Join(".", pieces.Take(2).ToArray()));
-			var minorVersion = double.Parse(pieces.Last());
+			var majorVersion = int.Parse(pieces[0]);
+			var minorVersion = int.Parse(pieces[1]);
+			var patchVersion = int.Parse(pieces[2]);
+			var scriptVersion = int.MaxValue;
 
-			if (pieces.Length == 2)
+			if (pieces.Length > 3)
 			{
-				minorVersion = double.MaxValue;
+				scriptVersion = int.Parse(pieces[3]);
 			}
 
-			return new DatabaseVersion(majorVersion, minorVersion);
+			return new DatabaseVersion(majorVersion, minorVersion, patchVersion, scriptVersion);
 		}
 
-		public double MajorVersion { get; private set; }
-		public double MinorVersion { get; private set; }
+		public int MajorVersion { get; private set; }
+		public int MinorVersion { get; private set; }
+		public int PatchVersion { get; private set; }
+		public int ScriptVersion { get; private set; }
 
-		public DatabaseVersion() : this(0,0)
+		public DatabaseVersion() : this(0, 0, 0, 0)
 		{
 		}
 
-		public DatabaseVersion(double majorVersion, double minorVersion)
+		public DatabaseVersion(int majorVersion, int minorVersion, int patchVersion, int scriptVersion)
 		{
 			MajorVersion = majorVersion;
 			MinorVersion = minorVersion;
+			PatchVersion = patchVersion;
+			ScriptVersion = scriptVersion;
 		}
 
 		public override string ToString()
 		{
-			return string.Format("{0:F2}.{1:F0}", 
-				MajorVersion == double.MaxValue ? (object)"*" : MajorVersion, 
-				MinorVersion == double.MaxValue ? (object)"*" : MinorVersion);
+			return string.Format("{0}.{1}.{2}.{3}", 
+				MajorVersion == int.MaxValue ? (object)"*" : MajorVersion, 
+				MinorVersion == int.MaxValue ? (object)"*" : MinorVersion,
+				PatchVersion == int.MaxValue ? (object)"*" : PatchVersion,
+				ScriptVersion == int.MaxValue ? (object)"*" : ScriptVersion
+				);
 		}
 	}
 }

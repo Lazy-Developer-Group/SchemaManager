@@ -2,10 +2,7 @@ USE [master]
 GO
 
 
-CREATE DATABASE [SchemaManagerIntegrationTests] ON  PRIMARY 
-( NAME = N'SchemaManagerIntegrationTests', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10.MSSQLSERVER\MSSQL\DATA\SchemaManagerIntegrationTests.mdf' , SIZE = 2048KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
- LOG ON 
-( NAME = N'SchemaManagerIntegrationTests_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL10.MSSQLSERVER\MSSQL\DATA\SchemaManagerIntegrationTests_log.ldf' , SIZE = 1024KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+CREATE DATABASE [SchemaManagerIntegrationTests]
 GO
 
 ALTER DATABASE [SchemaManagerIntegrationTests] SET COMPATIBILITY_LEVEL = 100

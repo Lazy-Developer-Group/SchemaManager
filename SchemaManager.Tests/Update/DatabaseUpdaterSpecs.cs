@@ -119,7 +119,7 @@ namespace SchemaManager.Tests.Update
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(0,0));
+						.Returns(new DatabaseVersion(0,0, 0, 0));
 				}
 			}
 
@@ -134,7 +134,7 @@ namespace SchemaManager.Tests.Update
 					base.Given();
 
 					var schemaChange = GetMockFor<ISchemaChange>();
-					var version = new DatabaseVersion(1, 0);
+					var version = new DatabaseVersion(1, 0, 0, 0);
 					schemaChange.SetupGet(s => s.Version).Returns(version);
 					schemaChange.Setup(s => s.NeedsToBeAppliedTo(It.IsAny<IDatabase>()))
 						.Returns((IDatabase d) => version > d.Revision);
@@ -153,7 +153,7 @@ namespace SchemaManager.Tests.Update
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(0, 0));
+						.Returns(new DatabaseVersion(0, 0, 0, 0));
 				}
 			}
 
@@ -165,7 +165,7 @@ namespace SchemaManager.Tests.Update
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(1, 0));
+						.Returns(new DatabaseVersion(1, 0, 0, 0));
 				}
 			}
 
@@ -176,7 +176,7 @@ namespace SchemaManager.Tests.Update
 					base.ConfigureContainer(container);
 
 					container.Model.EjectAndRemove(typeof (DatabaseVersion));
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0)));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0, 0, 0)));
 				}
 			}
 		}

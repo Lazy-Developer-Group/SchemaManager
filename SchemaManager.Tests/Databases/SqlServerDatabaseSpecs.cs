@@ -6,6 +6,7 @@ using SchemaManager.Tests.Helpers;
 using Should;
 using Moq;
 using Utilities.Data;
+using SpecsFor.ShouldExtensions;
 
 namespace SchemaManager.Tests.Databases
 {
@@ -30,8 +31,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_returns_version_1()
 			{
-				_revision.MajorVersion.ShouldEqual(1);
-				_revision.MinorVersion.ShouldEqual(0);
+				_revision.ShouldLookLike(new DatabaseVersion(1, 0, 0, 0));
 			}
 		}
 
@@ -48,8 +48,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_returns_the_correct_version()
 			{
-				_revision.MajorVersion.ShouldEqual(1.15);
-				_revision.MinorVersion.ShouldEqual(1);
+				_revision.ShouldLookLike(new DatabaseVersion(1, 2, 5, 1));
 			}
 		}
 
@@ -59,7 +58,7 @@ namespace SchemaManager.Tests.Databases
 			protected override void When()
 			{
 				var schemaChange = GetMockFor<ISchemaChange>();
-				schemaChange.Setup(s => s.Version).Returns(new DatabaseVersion(2, 0));
+				schemaChange.Setup(s => s.Version).Returns(new DatabaseVersion(2, 3, 4, 5));
 
 				SUT.ExecuteUpdate(schemaChange.Object);
 			}
@@ -67,8 +66,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_updates_the_database_version()
 			{
-				SUT.Revision.MajorVersion.ShouldEqual(2);
-				SUT.Revision.MinorVersion.ShouldEqual(0);
+				SUT.Revision.ShouldLookLike(new DatabaseVersion(2, 3, 4, 5));
 			}
 
 			[Test]
@@ -85,8 +83,8 @@ namespace SchemaManager.Tests.Databases
 			protected override void When()
 			{
 				var schemaChange = GetMockFor<ISchemaChange>();
-				schemaChange.Setup(s => s.Version).Returns(new DatabaseVersion(1, 1));
-				schemaChange.Setup(s => s.PreviousVersion).Returns(new DatabaseVersion(1, 0));
+				schemaChange.Setup(s => s.Version).Returns(new DatabaseVersion(1, 1, 0, 0));
+				schemaChange.Setup(s => s.PreviousVersion).Returns(new DatabaseVersion(1, 0, 0, 0));
 
 				SUT.ExecuteRollback(schemaChange.Object);
 			}
@@ -101,8 +99,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_updates_the_database_version()
 			{
-				SUT.Revision.MajorVersion.ShouldEqual(1);
-				SUT.Revision.MinorVersion.ShouldEqual(0);
+				SUT.Revision.ShouldLookLike(new DatabaseVersion(1, 0, 0, 0));
 			}
 		}
 
@@ -137,7 +134,7 @@ namespace SchemaManager.Tests.Databases
 					ExecuteNonQuery(@"IF EXISTS (select * from sys.extended_properties WHERE name = 'DatabaseVersion')
 											exec sp_dropextendedproperty @name='DatabaseVersion'");
 
-					ExecuteNonQuery("exec sp_addextendedproperty @name='DatabaseVersion', @value='1.15.1'");
+					ExecuteNonQuery("exec sp_addextendedproperty @name='DatabaseVersion', @value='1.2.5.1'");
 				}
 			}
 		}

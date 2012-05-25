@@ -95,7 +95,7 @@ namespace SchemaManager.Tests.Rollback
 				{
 					base.ConfigureContainer(container);
 
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0)));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0, 0, 0)));
 				}
 
 				protected override void Given()
@@ -104,7 +104,7 @@ namespace SchemaManager.Tests.Rollback
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(double.MaxValue, double.MaxValue));
+						.Returns(new DatabaseVersion(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue));
 				}
 			}
 
@@ -119,7 +119,7 @@ namespace SchemaManager.Tests.Rollback
 					base.Given();
 
 					var schemaChange = GetMockFor<ISchemaChange>();
-					var version = new DatabaseVersion(1, 0);
+					var version = new DatabaseVersion(1, 0, 0, 0);
 					schemaChange.SetupGet(s => s.Version).Returns(version);
 					schemaChange.Setup(s => s.NeedsToBeRolledBackFrom(It.IsAny<IDatabase>()))
 						.Returns((IDatabase d) => d.Revision >= version);
@@ -138,18 +138,18 @@ namespace SchemaManager.Tests.Rollback
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(2, 0));
+						.Returns(new DatabaseVersion(2, 0, 0, 0));
 				}
 			}
 
 			public abstract class there_are_rollbacks_available_for_a_current_database : there_are_rollbacks_available
 			{
-				protected override void ConfigureContainer(StructureMap.IContainer container)
+				protected override void ConfigureContainer(IContainer container)
 				{
 					base.ConfigureContainer(container);
 
 					container.Model.EjectAndRemove(typeof(DatabaseVersion));
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(1, 0)));
+					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(1, 0, 0, 0)));
 				}
 
 				protected override void Given()
@@ -158,7 +158,7 @@ namespace SchemaManager.Tests.Rollback
 
 					GetMockFor<IDatabase>()
 						.Setup(d => d.Revision)
-						.Returns(new DatabaseVersion(1, 0));
+						.Returns(new DatabaseVersion(1, 0, 0, 0));
 				}
 			}
 		}

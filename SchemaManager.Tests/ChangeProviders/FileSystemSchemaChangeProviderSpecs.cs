@@ -9,6 +9,7 @@ using StructureMap;
 using System.Linq;
 using Utilities.General;
 using SpecsFor;
+using SpecsFor.ShouldExtensions;
 
 namespace SchemaManager.Tests.ChangeProviders
 {
@@ -80,6 +81,22 @@ namespace SchemaManager.Tests.ChangeProviders
 				{
 					changes[i].PreviousVersion.ShouldEqual(changes[i - 1].Version);
 				}
+			}
+
+			[Test]
+			public void then_it_populates_the_version_numbers_correctly()
+			{
+				_results.Select(r => r.Version).ToArray().ShouldLookLike(new[]
+				                                               	{
+				                                               		new DatabaseVersion(1,1,1,1),
+				                                               		new DatabaseVersion(1,1,1,2),
+				                                               		new DatabaseVersion(1,1,2,1),
+				                                               		new DatabaseVersion(1,1,2,2),
+				                                               		new DatabaseVersion(2,2,1,1),
+				                                               		new DatabaseVersion(2,2,1,2),
+				                                               		new DatabaseVersion(10,0,0,1),
+				                                               		new DatabaseVersion(10,0,0,2),
+				                                               	});
 			}
 		}
 

@@ -28,42 +28,29 @@ namespace SchemaManager.ChangeProviders
 		{
 			var directoryName = directory.Split('\\').Last();
 
-			return Regex.IsMatch(directoryName, @"^\d+\.\d+");
+			return Regex.IsMatch(directoryName, @"^\d+\.\d+\.\d+");
 		}
 
-		private double GetMajorVersion(string majorVersionFolder)
+		private string GetMajorVersion(string majorVersionFolder)
 		{
-			double majorVersion;
-			if (!double.TryParse(majorVersionFolder.Split('\\').Last(), out majorVersion))
-			{
-				throw new InvalidOperationException("Unable to exract the major version from folder: " + majorVersionFolder);
-			}
-
-			return majorVersion;
+			return majorVersionFolder.Split('\\').Last();
 		}
 
-		private double GetMinorVersion(string schemaChangeFolder)
+		private string GetMinorVersion(string schemaChangeFolder)
 		{
-			double minorVersion;
-
 			//'schemaChange' will look like ParentDir\01.Blah, this parses out the '01' part. 
-			if (!double.TryParse(schemaChangeFolder.Split('\\').Last().Split('.').First(), out minorVersion))
-			{
-				throw new InvalidOperationException("Unable to extract the minor version from folder: " + minorVersion);
-			}
-
-			return minorVersion;
+			return schemaChangeFolder.Split('\\').Last().Split('.').First();
 		}
 
 		public IEnumerable<ISchemaChange> GetAllChanges()
 		{
-			var previousVersion = new DatabaseVersion(1, 0);
+			var previousVersion = new DatabaseVersion(1, 0, 0, 0);
 
 			return (from majorVersionFolder in Directory.GetDirectories(_pathToSchemaScripts).Where(d => IsVersionFolder(d))
 			        let majorVersion = GetMajorVersion(majorVersionFolder)
 			        from schemaChangeFolder in Directory.GetDirectories(majorVersionFolder).Where(d => IsSchemaChangeFolder(d))
 			        let minorVersion = GetMinorVersion(schemaChangeFolder)
-			        let currentVersion = new DatabaseVersion(majorVersion, minorVersion)
+			        let currentVersion = DatabaseVersion.FromString(majorVersion + "." + minorVersion)
 					select new SchemaChange(Path.GetFullPath(schemaChangeFolder), currentVersion, previousVersion))
 					.Do(s => previousVersion = s.Version)
 					.OrderBy(s => s.Version)
