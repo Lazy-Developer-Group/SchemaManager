@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using SchemaManager.Databases;
 using Utilities.Data;
 
 namespace SchemaManager.Core
 {
-	public class SchemaChange : ISchemaChange
+	public class SchemaChange : ScriptBase, ISchemaChange
 	{
 		private const string BackFile = "Back.sql";
 		private const string ForwardFile = "Forward.sql";
-
-		private static readonly Regex _batchSplitter = new Regex(@"^GO\s*$", RegexOptions.Multiline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 		public string PathToSchemaChangeFolder { get; private set; }
 		public DatabaseVersion Version { get; private set; }
@@ -26,38 +20,14 @@ namespace SchemaManager.Core
 			PreviousVersion = previousVersion;
 		}
 
-		private IEnumerable<string> GetBatchesFrom(string sqlScriptFile)
-		{
-			var sql = File.ReadAllText(sqlScriptFile);
-
-			return from batch in _batchSplitter.Split(sql)
-			       let trimmedBatch = batch.Trim()
-			       where !string.IsNullOrEmpty(trimmedBatch)
-			       select trimmedBatch;
-		}
-
-		private void RunAllBatchesFromFile(IDbContext context, string sqlScriptFile)
-		{
-			foreach (var sqlBatch in GetBatchesFrom(sqlScriptFile))
-			{
-				var command = context.CreateCommand();
-				//TODO: Is this safe?  30 minutes is a heck of a timeout...
-				command.CommandTimeout = (int)TimeSpan.FromMinutes(30).TotalSeconds;
-
-				command.CommandText = sqlBatch;
-
-				command.ExecuteNonQuery();
-			}
-		}
-
 		public void Execute(IDbContext context)
 		{
-			RunAllBatchesFromFile(context, Path.Combine(PathToSchemaChangeFolder, ForwardFile));
+			RunAllBatchesFromText(context, File.ReadAllText(Path.Combine(PathToSchemaChangeFolder, ForwardFile)));
 		}
 
 		public void Rollback(IDbContext context)
 		{
-			RunAllBatchesFromFile(context, Path.Combine(PathToSchemaChangeFolder, BackFile));
+			RunAllBatchesFromText(context, File.ReadAllText(Path.Combine(PathToSchemaChangeFolder, BackFile)));
 		}
 
 		public bool NeedsToBeAppliedTo(IDatabase database)

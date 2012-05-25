@@ -48,7 +48,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlwaysRun\FileSystemAlwaysRunScriptsProvider.cs" />
+    <Compile Include="AlwaysRun\IProvideAlwaysRunScripts.cs" />
+    <Compile Include="AlwaysRun\NullAlwaysRunScriptsProvider.cs" />
+    <Compile Include="Core\SimpleScript.cs" />
     <Compile Include="ChangeProviders\RebuildLatestVersionDecorator.cs" />
+    <Compile Include="Core\ISimpleScript.cs" />
+    <Compile Include="Core\ScriptBase.cs" />
     <Compile Include="Rollback\DatabaseReverter.cs" />
     <Compile Include="Update\DatabaseUpdater.cs" />
     <Compile Include="Core\DatabaseVersion.cs" />

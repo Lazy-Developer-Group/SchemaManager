@@ -7,5 +7,6 @@ namespace SchemaManager.Databases
 		DatabaseVersion Revision { get; }
 		void ExecuteUpdate(ISchemaChange schemaChange);
 		void ExecuteRollback(ISchemaChange schemaChange);
+		void ExecuteScript(ISimpleScript script);
 	}
 }

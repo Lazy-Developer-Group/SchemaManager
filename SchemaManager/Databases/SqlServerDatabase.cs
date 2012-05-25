@@ -49,17 +49,22 @@ namespace SchemaManager.Databases
 		private void SetDatabaseRevisionTo(DatabaseVersion version)
 		{
 			var command = _context.CreateCommand();
-			command.CommandText = string.Format("exec sp_updateextendedproperty @name='DatabaseVersion', @value='{0:F2}.{1:F0}'",
-			                                    version.MajorVersion, version.MinorVersion);
+			command.CommandText = string.Format("exec sp_updateextendedproperty @name='DatabaseVersion', @value='{0}.{1}.{2}.{3}'",
+			                                    version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
 
 			command.ExecuteNonQuery();
 
 			_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
 		}
 
+		private static TransactionScope CreateTransaction()
+		{
+			return new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30));
+		}
+
 		public void ExecuteUpdate(ISchemaChange schemaChange)
 		{
-			using (var transaction = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
+			using (var transaction = CreateTransaction())
 			{
 				schemaChange.Execute(_context);
 
@@ -71,11 +76,21 @@ namespace SchemaManager.Databases
 
 		public void ExecuteRollback(ISchemaChange schemaChange)
 		{
-			using (var transaction = new TransactionScope())
+			using (var transaction = CreateTransaction())
 			{
 				schemaChange.Rollback(_context);
 
 				SetDatabaseRevisionTo(schemaChange.PreviousVersion);
+
+				transaction.Complete();
+			}
+		}
+
+		public void ExecuteScript(ISimpleScript script)
+		{
+			using (var transaction = CreateTransaction())
+			{
+				script.Execute(_context);
 
 				transaction.Complete();
 			}

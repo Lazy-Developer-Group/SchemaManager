@@ -77,7 +77,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlwaysRun\FileSystemAlwaysRunScriptsProviderSpecs.cs" />
+    <Compile Include="AlwaysRun\NullAlwaysRunScriptsProviderSpecs.cs" />
     <Compile Include="ChangeProviders\RebuildLatestVersionDecoratorSpecs.cs" />
+    <Compile Include="Core\SimpleScriptSpecs.cs" />
     <Compile Include="Helpers\ShouldExtensions.cs" />
     <Compile Include="Helpers\SpecsForWithDatabase.cs" />
     <Compile Include="Rollback\DatabaseReverterSpecs.cs" />
@@ -105,58 +108,64 @@
     <EmbeddedResource Include="Core\MultipleBatchesWithComments.sql" />
     <Content Include="CreateTestDatabase.sql" />
     <Content Include="Readme.txt" />
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\01.US12345\Back.sql">
+    <Content Include="TestScripts\AlwaysRunScripts\01-Script.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\01.US12345\Forward.sql">
+    <Content Include="TestScripts\AlwaysRunScripts\02-Script.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\02.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\01.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\02.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\01.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\02.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.01\US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\02.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.02\01.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.02\01.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.01\US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.02\02.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.02\01.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\01.01.02\02.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.02\01.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\10.0.0\01.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.02\02.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\10.0.0\01.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\01.01.02\02.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\10.0.0\02.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\10.0.0\01.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\10.0.0\02.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\10.0.0\01.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\02.02.01\01.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\10.0.0\02.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\02.02.01\01.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\10.0.0\02.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\02.02.01\02.US12345\Back.sql">
+    <Content Include="TestScripts\ChangeScripts\02.02.01\01.US12345\Back.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestChangeScripts\ChangeScripts\02.02.01\02.US12345\Forward.sql">
+    <Content Include="TestScripts\ChangeScripts\02.02.01\01.US12345\Forward.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\ChangeScripts\02.02.01\02.US12345\Back.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestScripts\ChangeScripts\02.02.01\02.US12345\Forward.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -166,6 +175,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

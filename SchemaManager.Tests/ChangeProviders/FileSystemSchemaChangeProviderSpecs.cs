@@ -113,7 +113,7 @@ namespace SchemaManager.Tests.ChangeProviders
 					//MS Test handles test files very differently than TDD, Resharper, or any real testing framework. 
 					if (!Directory.Exists(testScriptPath))
 					{
-						testScriptPath = @"TestChangeScripts\ChangeScripts";
+						testScriptPath = @"TestScripts\ChangeScripts";
 					}
 
 					container.Configure(cfg => cfg.For<FileSystemSchemaChangeProvider>().Use(ctx => new FileSystemSchemaChangeProvider(testScriptPath)));

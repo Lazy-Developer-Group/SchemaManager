@@ -75,6 +75,15 @@ namespace SchemaManager.Tests.Databases
 				GetMockFor<ISchemaChange>()
 					.Verify(s => s.Execute(It.IsAny<IDbContext>()));
 			}
+
+			[Test]
+			public void then_it_sets_the_version_correctly_in_the_database()
+			{
+				var version = ExecuteScalar<string>("select value from sys.extended_properties WHERE name = 'DatabaseVersion'");
+				DatabaseVersion.FromString(version).ShouldLookLike(new DatabaseVersion(2, 3, 4, 5));
+			}
+
+			
 		}
 
 		[TestFixture]
@@ -100,6 +109,21 @@ namespace SchemaManager.Tests.Databases
 			public void then_it_updates_the_database_version()
 			{
 				SUT.Revision.ShouldLookLike(new DatabaseVersion(1, 0, 0, 0));
+			}
+		}
+
+		public class when_running_a_standard_script : given.the_default_state
+		{
+			protected override void When()
+			{
+				SUT.ExecuteScript(GetMockFor<ISimpleScript>().Object);
+			}
+
+			[Test]
+			public void then_it_executes_the_script_with_the_context()
+			{
+				GetMockFor<ISimpleScript>()
+					.Verify(s => s.Execute(It.IsAny<IDbContext>()));
 			}
 		}
 

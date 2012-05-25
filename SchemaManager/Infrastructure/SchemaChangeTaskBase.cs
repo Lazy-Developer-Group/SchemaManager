@@ -16,6 +16,8 @@ namespace SchemaManager.Infrastructure
 		[Required]
 		public string PathToChangeScripts { get; set; }
 
+		public string PathToAlwaysRunScripts { get; set; }
+
 		public virtual string TargetRevision
 		{
 			get
@@ -50,7 +52,7 @@ namespace SchemaManager.Infrastructure
 
 		protected virtual StandardKernel BuildKernel()
 		{
-			return new StandardKernel(new SchemaManagerModule(this, PathToChangeScripts, ConnectionString, _targetRevision));
+			return new StandardKernel(new SchemaManagerModule(this, PathToChangeScripts, PathToAlwaysRunScripts, ConnectionString, _targetRevision));
 		}
 
 		protected abstract void RunSchemaChanges(StandardKernel kernel);

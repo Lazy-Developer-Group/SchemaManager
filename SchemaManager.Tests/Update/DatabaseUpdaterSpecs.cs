@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
 using SchemaManager.Core;
 using Moq;
@@ -44,6 +45,13 @@ namespace SchemaManager.Tests.Update
 			{
 				GetMockFor<IDatabase>()
 					.Verify(d => d.ExecuteUpdate(It.IsAny<ISchemaChange>()), Times.Never());
+			}
+
+			[Test]
+			public void then_it_executes_the_always_run_scripts()
+			{
+				GetMockFor<IDatabase>()
+				    .Verify(d => d.ExecuteScript(It.IsAny<ISimpleScript>()), Times.Once());
 			}
 		}
 
@@ -125,6 +133,13 @@ namespace SchemaManager.Tests.Update
 
 			public abstract class there_are_no_updates : the_default_state
 			{
+				protected override void Given()
+				{
+					base.Given();
+
+					GetMockFor<IProvideAlwaysRunScripts>()
+						.Setup(p => p.GetScripts()).Returns(new[] {GetMockFor<ISimpleScript>().Object});
+				}
 			}
 
 			public abstract class there_are_updates_available : the_default_state
