@@ -16,7 +16,7 @@ namespace SchemaManager.AlwaysRun
 
 		public IEnumerable<ISimpleScript> GetScripts()
 		{
-			return Directory.EnumerateFiles(_pathToScripts).Select(script => new SimpleScript(script));
+			return Directory.EnumerateFiles(_pathToScripts).Select(script => new SimpleScript(File.ReadAllText(script)));
 		}
 	}
 }

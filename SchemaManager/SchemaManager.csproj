@@ -55,6 +55,7 @@
     <Compile Include="ChangeProviders\RebuildLatestVersionDecorator.cs" />
     <Compile Include="Core\ISimpleScript.cs" />
     <Compile Include="Core\ScriptBase.cs" />
+    <Compile Include="Databases\NullDatabase.cs" />
     <Compile Include="Rollback\DatabaseReverter.cs" />
     <Compile Include="Update\DatabaseUpdater.cs" />
     <Compile Include="Core\DatabaseVersion.cs" />

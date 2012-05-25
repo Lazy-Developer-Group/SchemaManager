@@ -18,6 +18,8 @@ namespace SchemaManager.Infrastructure
 
 		public string PathToAlwaysRunScripts { get; set; }
 
+		public bool WhatIf { get; set; }
+
 		public virtual string TargetRevision
 		{
 			get
@@ -52,7 +54,7 @@ namespace SchemaManager.Infrastructure
 
 		protected virtual StandardKernel BuildKernel()
 		{
-			return new StandardKernel(new SchemaManagerModule(this, PathToChangeScripts, PathToAlwaysRunScripts, ConnectionString, _targetRevision));
+			return new StandardKernel(new SchemaManagerModule(this, PathToChangeScripts, PathToAlwaysRunScripts, ConnectionString, _targetRevision, WhatIf));
 		}
 
 		protected abstract void RunSchemaChanges(StandardKernel kernel);

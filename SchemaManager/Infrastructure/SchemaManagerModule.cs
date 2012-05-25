@@ -17,14 +17,16 @@ namespace SchemaManager.Infrastructure
 		private readonly string _connectionString;
 		private readonly string _pathToAlwaysRunScripts;
 		private readonly DatabaseVersion _targetVersion;
+		private readonly bool _whatIf;
 
-		public SchemaManagerModule(Task owner, string pathToSchemaScripts, string pathToAlwaysRunScripts, string connectionString, DatabaseVersion targetVersion)
+		public SchemaManagerModule(Task owner, string pathToSchemaScripts, string pathToAlwaysRunScripts, string connectionString, DatabaseVersion targetVersion, bool whatIf)
 		{
 			_owner = owner;
 			_pathToSchemaScripts = pathToSchemaScripts;
 			_connectionString = connectionString;
 			_pathToAlwaysRunScripts = pathToAlwaysRunScripts;
 			_targetVersion = targetVersion;
+			_whatIf = whatIf;
 		}
 
 		public override void Load()
@@ -56,6 +58,13 @@ namespace SchemaManager.Infrastructure
 			else
 			{
 				Bind<IProvideAlwaysRunScripts>().To<NullAlwaysRunScriptsProvider>();
+			}
+
+			if (_whatIf)
+			{
+				Unbind<IDatabase>();
+				Bind<IDatabase>().To<SqlServerDatabase>().WhenInjectedInto<NullDatabase>();
+				Bind<IDatabase>().To<NullDatabase>();
 			}
 		}
 	}

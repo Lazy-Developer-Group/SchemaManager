@@ -19,6 +19,11 @@ namespace SchemaManager.ChangeProviders
 		{
 			var changes = _provider.GetAllChanges();
 
+			if (!changes.Any())
+			{
+				return new ISchemaChange[0];
+			}
+
 			var maxVersion = changes.Max(c => c.Version);
 
 			var baseVersion = new DatabaseVersion(maxVersion.MajorVersion, maxVersion.MinorVersion, maxVersion.PatchVersion, 0);
