@@ -25,7 +25,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_adds_version_information_to_the_database()
 			{
-				ExecuteScalar<int>("select count(*) from sys.extended_properties WHERE name = 'DatabaseVersion'").ShouldEqual(1);
+				Context.ExecuteScalar<int>("select count(*) from sys.extended_properties WHERE name = 'DatabaseVersion'").ShouldEqual(1);
 			}
 
 			[Test]
@@ -79,7 +79,7 @@ namespace SchemaManager.Tests.Databases
 			[Test]
 			public void then_it_sets_the_version_correctly_in_the_database()
 			{
-				var version = ExecuteScalar<string>("select value from sys.extended_properties WHERE name = 'DatabaseVersion'");
+				var version = Context.ExecuteScalar<string>("select value from sys.extended_properties WHERE name = 'DatabaseVersion'");
 				DatabaseVersion.FromString(version).ShouldLookLike(new DatabaseVersion(2, 3, 4, 5));
 			}
 
@@ -143,7 +143,7 @@ namespace SchemaManager.Tests.Databases
 				{
 					base.Given();
 
-					ExecuteNonQuery(@"IF EXISTS (select * from sys.extended_properties WHERE name = 'DatabaseVersion')
+					Context.ExecuteNonQuery(@"IF EXISTS (select * from sys.extended_properties WHERE name = 'DatabaseVersion')
 											exec sp_dropextendedproperty @name='DatabaseVersion'");
 				}
 			}
@@ -155,10 +155,10 @@ namespace SchemaManager.Tests.Databases
 					base.Given();
 
 					//Clear it if it's there, then insert a known state.
-					ExecuteNonQuery(@"IF EXISTS (select * from sys.extended_properties WHERE name = 'DatabaseVersion')
+					Context.ExecuteNonQuery(@"IF EXISTS (select * from sys.extended_properties WHERE name = 'DatabaseVersion')
 											exec sp_dropextendedproperty @name='DatabaseVersion'");
 
-					ExecuteNonQuery("exec sp_addextendedproperty @name='DatabaseVersion', @value='1.2.5.1'");
+					Context.ExecuteNonQuery("exec sp_addextendedproperty @name='DatabaseVersion', @value='1.2.5.1'");
 				}
 			}
 		}

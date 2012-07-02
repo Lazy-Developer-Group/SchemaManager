@@ -1,4 +1,3 @@
-using System.Data;
 using System.Transactions;
 using Utilities.Data;
 using SpecsFor;
@@ -23,34 +22,17 @@ namespace SchemaManager.Tests.Helpers
 			container.Configure(cfg => cfg.For<IDbContext>().Use(Context));
 		}
 
-		protected override void AfterEachSpec()
+		public override void TearDown()
 		{
-			base.AfterEachSpec();
-
-			//Since the transaction hasn't been completed, it will be rolled back when it is disposed. 
-			Transaction.Dispose();
-
-			Context.Close();
-		}
-
-		protected IDbCommand GetCommand(string commandText)
-		{
-			var command = Context.CreateCommand();
-			command.CommandText = commandText;
-			return command;
-		}
-
-		protected void ExecuteNonQuery(string commandText)
-		{
-			var command = GetCommand(commandText);
-
-			command.ExecuteNonQuery();
-		}
-
-		protected TScalar ExecuteScalar<TScalar>(string query)
-		{
-			var command = GetCommand(query);
-			return (TScalar)command.ExecuteScalar();
+			try
+			{
+				base.TearDown();
+			}
+			finally
+			{
+				Transaction.Dispose();
+				Context.Close();
+			}
 		}
 	}
 }

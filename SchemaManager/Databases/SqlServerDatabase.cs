@@ -1,5 +1,4 @@
-﻿using System;
-using System.Transactions;
+﻿using System.Transactions;
 using SchemaManager.Core;
 using Utilities.Data;
 
@@ -57,43 +56,23 @@ namespace SchemaManager.Databases
 			_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
 		}
 
-		private static TransactionScope CreateTransaction()
-		{
-			return new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30));
-		}
-
 		public void ExecuteUpdate(ISchemaChange schemaChange)
 		{
-			using (var transaction = CreateTransaction())
-			{
-				schemaChange.Execute(_context);
+			schemaChange.Execute(_context);
 
-				SetDatabaseRevisionTo(schemaChange.Version);
-
-				transaction.Complete();
-			}
+			SetDatabaseRevisionTo(schemaChange.Version);
 		}
 
 		public void ExecuteRollback(ISchemaChange schemaChange)
 		{
-			using (var transaction = CreateTransaction())
-			{
-				schemaChange.Rollback(_context);
+			schemaChange.Rollback(_context);
 
-				SetDatabaseRevisionTo(schemaChange.PreviousVersion);
-
-				transaction.Complete();
-			}
+			SetDatabaseRevisionTo(schemaChange.PreviousVersion);
 		}
 
 		public void ExecuteScript(ISimpleScript script)
 		{
-			using (var transaction = CreateTransaction())
-			{
-				script.Execute(_context);
-
-				transaction.Complete();
-			}
+			script.Execute(_context);
 		}
 	}
 }

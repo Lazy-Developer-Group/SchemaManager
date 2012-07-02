@@ -81,8 +81,10 @@
     <Compile Include="AlwaysRun\NullAlwaysRunScriptsProviderSpecs.cs" />
     <Compile Include="ChangeProviders\RebuildLatestVersionDecoratorSpecs.cs" />
     <Compile Include="Core\SimpleScriptSpecs.cs" />
+    <Compile Include="Helpers\DbContextExtensions.cs" />
     <Compile Include="Helpers\ShouldExtensions.cs" />
     <Compile Include="Helpers\SpecsForWithDatabase.cs" />
+    <Compile Include="IntegrationTests\SchemaUpdate.cs" />
     <Compile Include="Rollback\DatabaseReverterSpecs.cs" />
     <Compile Include="Update\DatabaseUpdaterSpecs.cs" />
     <Compile Include="Core\DatabaseVersionSpecs.cs" />
@@ -107,6 +109,24 @@
     <EmbeddedResource Include="Core\MultipleBatchesWithLowerCaseGo.sql" />
     <EmbeddedResource Include="Core\MultipleBatchesWithComments.sql" />
     <Content Include="CreateTestDatabase.sql" />
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\01.GoodScript\Back.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\01.GoodScript\Forward.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\02.BadScript\Back.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\02.BadScript\Forward.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\03.GoodScript\Back.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="IntegrationTests\SchemaUpdateChanges\1.0.0\03.GoodScript\Forward.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Readme.txt" />
     <Content Include="TestScripts\AlwaysRunScripts\01-Script.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -175,9 +195,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

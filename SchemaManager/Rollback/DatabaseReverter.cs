@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Transactions;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
 using SchemaManager.Core;
@@ -25,23 +26,28 @@ namespace SchemaManager.Rollback
 
 		public void ApplyRollbacks()
 		{
-			_logger.Info("Executing 'always run' scripts...");
-
-			foreach (var script in _alwaysRunScripts.GetScripts())
+			using (var scope = new TransactionScope())
 			{
-				_database.ExecuteScript(script);
-			}
+				_logger.Info("Executing 'always run' scripts...");
 
-			_logger.Info("Reverting database to revision {0}...", _targetVersion);
-
-			foreach (var change in _schemaChangeProvider.GetAllChanges().Reverse().Where(u => u.Version > _targetVersion))
-			{
-				if (change.NeedsToBeRolledBackFrom(_database))
+				foreach (var script in _alwaysRunScripts.GetScripts())
 				{
-					_logger.Info("Applying rollback for database version {0}...", change.Version);
-					_database.ExecuteRollback(change);
-					_logger.Info("Finished.");
+					_database.ExecuteScript(script);
 				}
+
+				_logger.Info("Reverting database to revision {0}...", _targetVersion);
+
+				foreach (var change in _schemaChangeProvider.GetAllChanges().Reverse().Where(u => u.Version > _targetVersion))
+				{
+					if (change.NeedsToBeRolledBackFrom(_database))
+					{
+						_logger.Info("Applying rollback for database version {0}...", change.Version);
+						_database.ExecuteRollback(change);
+						_logger.Info("Finished.");
+					}
+				}
+
+				scope.Complete();
 			}
 
 			_logger.Info("Database is at revision {0}", _database.Revision);
