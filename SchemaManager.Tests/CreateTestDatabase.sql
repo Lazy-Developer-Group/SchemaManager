@@ -8,12 +8,6 @@ GO
 ALTER DATABASE [SchemaManagerIntegrationTests] SET COMPATIBILITY_LEVEL = 100
 GO
 
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [SchemaManagerIntegrationTests].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-
 ALTER DATABASE [SchemaManagerIntegrationTests] SET ANSI_NULL_DEFAULT OFF 
 GO
 
@@ -99,16 +93,16 @@ ALTER DATABASE [SchemaManagerIntegrationTests] SET DB_CHAINING OFF
 GO
 
 
-CREATE LOGIN [testuser] WITH PASSWORD=N'testuser', DEFAULT_DATABASE=[SchemaManagerIntegrationTests], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+CREATE LOGIN [SchemaManagerTestUser] WITH PASSWORD=N'SchemaManagerTestUser', DEFAULT_DATABASE=[SchemaManagerIntegrationTests], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
 GO
 
-ALTER LOGIN [testuser] ENABLE
+ALTER LOGIN [SchemaManagerTestUser] ENABLE
 GO
 
 USE [SchemaManagerIntegrationTests]
 GO
 
-CREATE USER [testuser] FOR LOGIN [testuser] WITH DEFAULT_SCHEMA=[dbo]
+CREATE USER [SchemaManagerTestUser] FOR LOGIN [SchemaManagerTestUser] WITH DEFAULT_SCHEMA=[dbo]
 GO
 
-EXEC sp_addrolemember N'db_owner', N'testuser' 
+EXEC sp_addrolemember N'db_owner', N'SchemaManagerTestUser' 
