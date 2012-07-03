@@ -22,13 +22,15 @@ namespace SchemaManager.Core
 		{
 			foreach (var sqlBatch in GetBatchesFrom(script))
 			{
-				var command = context.CreateCommand();
-				//TODO: Is this safe?  30 minutes is a heck of a timeout...
-				command.CommandTimeout = (int)TimeSpan.FromMinutes(30).TotalSeconds;
+				using (var command = context.CreateCommand())
+				{
+					//TODO: Is this safe?  30 minutes is a heck of a timeout...
+					command.CommandTimeout = (int) TimeSpan.FromMinutes(30).TotalSeconds;
 
-				command.CommandText = sqlBatch;
+					command.CommandText = sqlBatch;
 
-				command.ExecuteNonQuery();
+					command.ExecuteNonQuery();
+				}
 			}
 		}
 	}

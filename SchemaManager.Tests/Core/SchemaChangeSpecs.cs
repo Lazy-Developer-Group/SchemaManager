@@ -30,14 +30,14 @@ namespace SchemaManager.Tests.Core
 			[Test]
 			public void then_it_sets_the_text_of_the_command()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.VerifySet(c => c.CommandText = File.ReadAllText(ForwardScript));
 			}
 
 			[Test]
 			public void then_it_executes_the_command()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.Verify(c => c.ExecuteNonQuery());
 			}
 		}
@@ -92,7 +92,7 @@ namespace SchemaManager.Tests.Core
 			[Test]
 			public void then_it_executes_a_command_for_each_batch()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.Verify(c => c.ExecuteNonQuery(), Times.Exactly(3));
 			}
 		}
@@ -107,14 +107,14 @@ namespace SchemaManager.Tests.Core
 			[Test]
 			public void then_it_breaks_batches_with_multi_line_comments_correctly()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.VerifySet(c => c.CommandText = It.Is<string>(s => s.StartsWith("/* \r\nTesting")));
 			}
 
 			[Test]
 			public void then_it_breaks_batches_with_single_line_comments_correctly()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.VerifySet(c => c.CommandText = It.Is<string>(s => s.StartsWith("-- Testing")));
 			}
 		}
@@ -163,7 +163,7 @@ namespace SchemaManager.Tests.Core
 
 					GetMockFor<IDbContext>()
 						.Setup(c => c.CreateCommand())
-						.Returns(GetMockFor<IDbCommand>().Object);
+						.Returns(GetMockFor<ICommand>().Object);
 				}
 			}
 

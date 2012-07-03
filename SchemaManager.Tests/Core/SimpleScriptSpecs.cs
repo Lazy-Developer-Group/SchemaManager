@@ -26,7 +26,7 @@ Line 3";
 			{
 				GetMockFor<IDbContext>()
 					.Setup(c => c.CreateCommand())
-					.Returns(GetMockFor<IDbCommand>().Object);
+					.Returns(GetMockFor<ICommand>().Object);
 			}
 
 			protected override void When()
@@ -37,7 +37,7 @@ Line 3";
 			[Test]
 			public void then_it_runs_all_the_batches_in_the_file()
 			{
-				GetMockFor<IDbCommand>()
+				GetMockFor<ICommand>()
 					.Verify(c => c.ExecuteNonQuery(), Times.Exactly(3));
 			}
 		}

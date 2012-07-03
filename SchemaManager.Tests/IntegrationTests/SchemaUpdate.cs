@@ -20,11 +20,11 @@ namespace SchemaManager.Tests.IntegrationTests
 		{
 			private const string TestScriptPath = @"IntegrationTests\SchemaUpdateChanges\";
 			private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["SchemaManagerIntegrationTests"].ConnectionString;
-			private DbContext _context;
+			private IDbContext _context;
 
 			protected override void InitializeClassUnderTest()
 			{
-				_context = new DbContext(ConnectionString);
+				_context = new TestDbContext(ConnectionString);
 				SUT = new DatabaseUpdater(new NullAlwaysRunScriptsProvider(), 
 					new FileSystemSchemaChangeProvider(TestScriptPath), new NullLogger(), 
 					new SqlServerDatabase(_context), 

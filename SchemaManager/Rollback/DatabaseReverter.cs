@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Transactions;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -26,7 +27,7 @@ namespace SchemaManager.Rollback
 
 		public void ApplyRollbacks()
 		{
-			using (var scope = new TransactionScope())
+			using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
 			{
 				_logger.Info("Executing 'always run' scripts...");
 

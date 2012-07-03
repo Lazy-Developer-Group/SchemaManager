@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Transactions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Ninject;
@@ -36,6 +38,7 @@ namespace SchemaManager.Infrastructure
 		{
 			using (var kernel = BuildKernel())
 			{
+				TransactionmanagerHelper.OverrideMaximumTimeout(TimeSpan.FromMinutes(30));
 				try
 				{
 					RunSchemaChanges(kernel);
@@ -58,5 +61,22 @@ namespace SchemaManager.Infrastructure
 		}
 
 		protected abstract void RunSchemaChanges(StandardKernel kernel);
+	}
+
+	public static class TransactionmanagerHelper
+	{
+		public static void OverrideMaximumTimeout(TimeSpan timeout)
+		{
+			//TransactionScope inherits a *maximum* timeout from Machine.config.  There's no way to override it from
+			//code unless you use reflection.  Hence this code!
+			//TransactionManager._cachedMaxTimeout
+			var type = typeof(TransactionManager);
+			var cachedMaxTimeout = type.GetField("_cachedMaxTimeout", BindingFlags.NonPublic | BindingFlags.Static);
+			cachedMaxTimeout.SetValue(null, true);
+
+			//TransactionManager._maximumTimeout
+			var maximumTimeout = type.GetField("_maximumTimeout", BindingFlags.NonPublic | BindingFlags.Static);
+			maximumTimeout.SetValue(null, TimeSpan.FromMinutes(30));
+		}
 	}
 }

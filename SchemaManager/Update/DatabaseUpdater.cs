@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Transactions;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -15,7 +16,11 @@ namespace SchemaManager.Update
 		private readonly IDatabase _database;
 		private readonly DatabaseVersion _targetVersion;
 
-		public DatabaseUpdater(IProvideAlwaysRunScripts alwaysRunScripts, IProvideSchemaChanges schemaChangeProvider, ILogger logger, IDatabase database, DatabaseVersion targetVersion)
+		public DatabaseUpdater(IProvideAlwaysRunScripts alwaysRunScripts, 
+			IProvideSchemaChanges schemaChangeProvider, 
+			ILogger logger, 
+			IDatabase database, 
+			DatabaseVersion targetVersion)
 		{
 			_alwaysRunScripts = alwaysRunScripts;
 			_schemaChangeProvider = schemaChangeProvider;
@@ -26,7 +31,7 @@ namespace SchemaManager.Update
 
 		public void ApplyUpdates()
 		{
-			using (var scope = new TransactionScope())
+			using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
 			{
 				_logger.Info("Executing 'always run' scripts...");
 

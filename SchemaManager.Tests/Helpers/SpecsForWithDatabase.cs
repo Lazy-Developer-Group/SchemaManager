@@ -6,7 +6,7 @@ namespace SchemaManager.Tests.Helpers
 {
 	public abstract class SpecsForWithDatabase<T> : SpecsFor<T> where T : class
 	{
-		protected DbContext Context;
+		protected IDbContext Context;
 		protected TransactionScope Transaction;
 
 		protected abstract string GetConnectionString();
@@ -17,7 +17,7 @@ namespace SchemaManager.Tests.Helpers
 
 			Transaction = new TransactionScope();
 
-			Context = new DbContext(GetConnectionString());
+			Context = new TestDbContext(GetConnectionString());
 
 			container.Configure(cfg => cfg.For<IDbContext>().Use(Context));
 		}
@@ -27,11 +27,11 @@ namespace SchemaManager.Tests.Helpers
 			try
 			{
 				base.TearDown();
+
 			}
 			finally
 			{
 				Transaction.Dispose();
-				Context.Close();
 			}
 		}
 	}

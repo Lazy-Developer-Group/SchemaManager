@@ -22,38 +22,35 @@ namespace SchemaManager.Databases
 
 		private DatabaseVersion LoadRevision()
 		{
-			var command = _context.CreateCommand();
-
-			command.CommandText = "SELECT COUNT(*) FROM sys.extended_properties WHERE name = 'DatabaseVersion'";
-			command.CommandTimeout = 60;
-			var count = (int)command.ExecuteScalar();
-
-			if (count == 0)
+			using (var command = _context.CreateCommand())
 			{
-				using (var scope = new TransactionScope())
+				command.CommandText = "SELECT COUNT(*) FROM sys.extended_properties WHERE name = 'DatabaseVersion'";
+				var count = (int) command.ExecuteScalar();
+
+				if (count == 0)
 				{
 					command.CommandText = "exec sp_addextendedproperty @name='DatabaseVersion', @value='1.0.0.0'";
 					command.ExecuteNonQuery();
-
-					scope.Complete();
 				}
+
+				command.CommandText = "SELECT value FROM sys.extended_properties WHERE name = 'DatabaseVersion'";
+				var value = (string) command.ExecuteScalar();
+
+				return DatabaseVersion.FromString(value);
 			}
-
-			command.CommandText = "SELECT value FROM sys.extended_properties WHERE name = 'DatabaseVersion'";
-			var value = (string)command.ExecuteScalar();
-
-			return DatabaseVersion.FromString(value);
 		}
 
 		private void SetDatabaseRevisionTo(DatabaseVersion version)
 		{
-			var command = _context.CreateCommand();
-			command.CommandText = string.Format("exec sp_updateextendedproperty @name='DatabaseVersion', @value='{0}.{1}.{2}.{3}'",
-			                                    version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
+			using (var command = _context.CreateCommand())
+			{
+				command.CommandText = string.Format("exec sp_updateextendedproperty @name='DatabaseVersion', @value='{0}.{1}.{2}.{3}'",
+													version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
 
-			command.ExecuteNonQuery();
+				command.ExecuteNonQuery();
 
-			_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
+				_revision = new DatabaseVersion(version.MajorVersion, version.MinorVersion, version.PatchVersion, version.ScriptVersion);
+			}
 		}
 
 		public void ExecuteUpdate(ISchemaChange schemaChange)
