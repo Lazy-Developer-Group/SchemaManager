@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Utilities.Data
@@ -10,13 +11,18 @@ namespace Utilities.Data
 
 		public CommandWrapper(string connectionString) : this(new SqlConnection(connectionString))
 		{
-			_connection.Open();
-			_disposeConnection = true;
 		}
 
 		public CommandWrapper(SqlConnection connection)
 		{
 			_connection = connection;
+
+			if (_connection.State == ConnectionState.Closed)
+			{
+				_connection.Open();
+				_disposeConnection = true;
+			}
+
 			_command = _connection.CreateCommand();
 			_command.CommandTimeout = 60;
 		}
