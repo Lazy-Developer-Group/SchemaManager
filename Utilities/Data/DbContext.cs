@@ -1,17 +1,26 @@
-﻿namespace Utilities.Data
+﻿using System;
+using System.Data.SqlClient;
+
+namespace Utilities.Data
 {
-	public class DbContext : IDbContext
+	public class DbContext : IDbContext, IDisposable
 	{
-		private readonly string _connectionString;
+		private readonly SqlConnection _connection;
 
 		public DbContext(string connectionString)
 		{
-			_connectionString = connectionString;
+			_connection = new SqlConnection(connectionString);
+			_connection.Open();
 		}
 
 		public ICommand CreateCommand()
 		{
-			return new CommandWrapper(_connectionString);
+			return new CommandWrapper(_connection);
+		}
+
+		public void Dispose()
+		{
+			_connection.Close();
 		}
 	}
 }
