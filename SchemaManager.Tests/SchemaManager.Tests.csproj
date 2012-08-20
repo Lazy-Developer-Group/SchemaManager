@@ -84,7 +84,6 @@
     <Compile Include="Helpers\DbContextExtensions.cs" />
     <Compile Include="Helpers\ShouldExtensions.cs" />
     <Compile Include="Helpers\SpecsForWithDatabase.cs" />
-    <Compile Include="Helpers\TestDbContext.cs" />
     <Compile Include="IntegrationTests\SchemaUpdate.cs" />
     <Compile Include="Rollback\DatabaseReverterSpecs.cs" />
     <Compile Include="Update\DatabaseUpdaterSpecs.cs" />

@@ -17,7 +17,7 @@ namespace SchemaManager.Tests.Helpers
 
 			Transaction = new TransactionScope();
 
-			Context = new TestDbContext(GetConnectionString());
+			Context = new DbContext(GetConnectionString());
 
 			container.Configure(cfg => cfg.For<IDbContext>().Use(Context));
 		}

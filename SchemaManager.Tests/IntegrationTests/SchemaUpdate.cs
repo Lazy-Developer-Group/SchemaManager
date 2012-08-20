@@ -24,7 +24,7 @@ namespace SchemaManager.Tests.IntegrationTests
 
 			protected override void InitializeClassUnderTest()
 			{
-				_context = new TestDbContext(ConnectionString);
+				_context = new DbContext(ConnectionString);
 				SUT = new DatabaseUpdater(new NullAlwaysRunScriptsProvider(), 
 					new FileSystemSchemaChangeProvider(TestScriptPath), new NullLogger(), 
 					new SqlServerDatabase(_context), 
