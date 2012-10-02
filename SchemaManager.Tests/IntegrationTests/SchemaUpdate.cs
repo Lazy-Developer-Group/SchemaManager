@@ -28,7 +28,7 @@ namespace SchemaManager.Tests.IntegrationTests
 				SUT = new DatabaseUpdater(new NullAlwaysRunScriptsProvider(), 
 					new FileSystemSchemaChangeProvider(TestScriptPath), new NullLogger(), 
 					new SqlServerDatabase(_context), 
-					DatabaseVersion.Max);
+					DatabaseVersion.Max, TimeSpan.FromMinutes(30));
 			}
 
 			protected override void When()

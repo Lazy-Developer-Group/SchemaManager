@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -104,6 +105,7 @@ namespace SchemaManager.Tests.Rollback
 					base.ConfigureContainer(container);
 
 					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0, 0, 0)));
+					container.Configure(cfg => cfg.For<TimeSpan>().Use(TimeSpan.FromMinutes(30)));
 				}
 
 				protected override void Given()

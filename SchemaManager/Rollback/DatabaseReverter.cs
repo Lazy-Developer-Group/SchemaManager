@@ -15,19 +15,26 @@ namespace SchemaManager.Rollback
 		private readonly ILogger _logger;
 		private readonly IDatabase _database;
 		private readonly DatabaseVersion _targetVersion;
+		private readonly TimeSpan _timeout;
 
-		public DatabaseReverter(IProvideAlwaysRunScripts alwaysRunScripts, IProvideSchemaChanges schemaChangeProvider, ILogger logger, IDatabase database, DatabaseVersion targetVersion)
+		public DatabaseReverter(IProvideAlwaysRunScripts alwaysRunScripts, 
+			IProvideSchemaChanges schemaChangeProvider, 
+			ILogger logger, 
+			IDatabase database, 
+			DatabaseVersion targetVersion,
+			TimeSpan timeout)
 		{
 			_alwaysRunScripts = alwaysRunScripts;
 			_schemaChangeProvider = schemaChangeProvider;
 			_logger = logger;
 			_database = database;
 			_targetVersion = targetVersion;
+			_timeout = timeout;
 		}
 
 		public void ApplyRollbacks()
 		{
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
+			using (var scope = new TransactionScope(TransactionScopeOption.Required, _timeout))
 			{
 				_logger.Info("Executing 'always run' scripts...");
 

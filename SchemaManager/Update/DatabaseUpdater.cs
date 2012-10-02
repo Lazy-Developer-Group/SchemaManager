@@ -15,23 +15,26 @@ namespace SchemaManager.Update
 		private readonly ILogger _logger;
 		private readonly IDatabase _database;
 		private readonly DatabaseVersion _targetVersion;
+		private readonly TimeSpan _timeout;
 
 		public DatabaseUpdater(IProvideAlwaysRunScripts alwaysRunScripts, 
 			IProvideSchemaChanges schemaChangeProvider, 
 			ILogger logger, 
 			IDatabase database, 
-			DatabaseVersion targetVersion)
+			DatabaseVersion targetVersion,
+			TimeSpan timeout)
 		{
 			_alwaysRunScripts = alwaysRunScripts;
 			_schemaChangeProvider = schemaChangeProvider;
 			_database = database;
 			_targetVersion = targetVersion;
+			_timeout = timeout;
 			_logger = logger;
 		}
 
 		public void ApplyUpdates()
 		{
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(30)))
+			using (var scope = new TransactionScope(TransactionScopeOption.Required, _timeout))
 			{
 				_logger.Info("Executing 'always run' scripts...");
 
@@ -44,7 +47,7 @@ namespace SchemaManager.Update
 
 				if (_targetVersion == DatabaseVersion.Max)
 				{
-					_logger.Info("Applying all available updates to database...");
+					_logger.Info("Applying all available updates to database, timeout set to {0} minutes...", _timeout.TotalMinutes);
 				}
 				else
 				{

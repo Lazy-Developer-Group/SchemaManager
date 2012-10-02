@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -119,6 +120,7 @@ namespace SchemaManager.Tests.Update
 					base.ConfigureContainer(container);
 
 					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(DatabaseVersion.Max));
+					container.Configure(cfg => cfg.For<TimeSpan>().Use(TimeSpan.FromMinutes(30)));
 				}
 
 				protected override void Given()

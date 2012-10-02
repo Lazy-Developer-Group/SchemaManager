@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Utilities;
+﻿using System;
+using Microsoft.Build.Utilities;
 using Ninject.Modules;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -17,15 +18,23 @@ namespace SchemaManager.Infrastructure
 		private readonly string _connectionString;
 		private readonly string _pathToAlwaysRunScripts;
 		private readonly DatabaseVersion _targetVersion;
+		private readonly TimeSpan _timeout;
 		private readonly bool _whatIf;
 
-		public SchemaManagerModule(Task owner, string pathToSchemaScripts, string pathToAlwaysRunScripts, string connectionString, DatabaseVersion targetVersion, bool whatIf)
+		public SchemaManagerModule(Task owner, 
+			string pathToSchemaScripts, 
+			string pathToAlwaysRunScripts, 
+			string connectionString, 
+			DatabaseVersion targetVersion, 
+			TimeSpan timeout,
+			bool whatIf)
 		{
 			_owner = owner;
 			_pathToSchemaScripts = pathToSchemaScripts;
 			_connectionString = connectionString;
 			_pathToAlwaysRunScripts = pathToAlwaysRunScripts;
 			_targetVersion = targetVersion;
+			_timeout = timeout;
 			_whatIf = whatIf;
 		}
 
@@ -34,10 +43,12 @@ namespace SchemaManager.Infrastructure
 			Bind<Task>().ToConstant(_owner);
 
 			Bind<IUpdateDatabase>().To<DatabaseUpdater>()
-				.WithConstructorArgument("targetVersion", _targetVersion);
+				.WithConstructorArgument("targetVersion", _targetVersion)
+				.WithConstructorArgument("timeout", _timeout);
 
 			Bind<IRollbackDatabase>().To<DatabaseReverter>()
-				.WithConstructorArgument("targetVersion", _targetVersion);
+				.WithConstructorArgument("targetVersion", _targetVersion)
+				.WithConstructorArgument("timeout", _timeout);
 
 			Bind<ILogger>().To<MSBuildLoggerAdapter>();
 
