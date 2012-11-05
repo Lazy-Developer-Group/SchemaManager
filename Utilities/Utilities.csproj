@@ -38,10 +38,12 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CommandWrapper.cs" />
     <Compile Include="Data\DbContext.cs" />
+    <Compile Include="Data\ICommand.cs" />
     <Compile Include="Data\IDbContext.cs" />
     <Compile Include="General\IEnumerableExtensions.cs" />
     <Compile Include="General\ResourceHelper.cs" />

@@ -13,15 +13,18 @@ namespace SchemaManager.Tests.Helpers
 
 		public static void ExecuteNonQuery(this IDbContext context, string commandText)
 		{
-			var command = context.GetCommand(commandText);
-
-			command.ExecuteNonQuery();
+			using (var command = context.GetCommand(commandText))
+			{
+				command.ExecuteNonQuery();	
+			}
 		}
 
 		public static TScalar ExecuteScalar<TScalar>(this IDbContext context, string query)
 		{
-			var command = context.GetCommand(query);
-			return (TScalar)command.ExecuteScalar();
+			using (var command = context.GetCommand(query))
+			{
+				return (TScalar)command.ExecuteScalar();	
+			}
 		}
 	}
 }

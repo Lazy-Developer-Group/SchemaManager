@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Transactions;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -14,27 +13,30 @@ namespace SchemaManager.Rollback
 		private readonly IProvideSchemaChanges _schemaChangeProvider;
 		private readonly ILogger _logger;
 		private readonly IDatabase _database;
-		private readonly DatabaseVersion _targetVersion;
-		private readonly TimeSpan _timeout;
+		private readonly SchemaManagerGlobalOptions _globalOptions;
+
+		private TransactionScope BuildTransactionScope()
+		{
+			return new TransactionScope(TransactionScopeOption.Required, _globalOptions.Timeout);
+		}
 
 		public DatabaseReverter(IProvideAlwaysRunScripts alwaysRunScripts, 
 			IProvideSchemaChanges schemaChangeProvider, 
 			ILogger logger, 
 			IDatabase database, 
-			DatabaseVersion targetVersion,
-			TimeSpan timeout)
+			SchemaManagerGlobalOptions globalOptions)
 		{
 			_alwaysRunScripts = alwaysRunScripts;
 			_schemaChangeProvider = schemaChangeProvider;
 			_logger = logger;
 			_database = database;
-			_targetVersion = targetVersion;
-			_timeout = timeout;
+			_globalOptions = globalOptions;
 		}
 
 		public void ApplyRollbacks()
 		{
-			using (var scope = new TransactionScope(TransactionScopeOption.Required, _timeout))
+			TransactionScope scope;
+			using (scope = BuildTransactionScope())
 			{
 				_logger.Info("Executing 'always run' scripts...");
 
@@ -43,15 +45,25 @@ namespace SchemaManager.Rollback
 					_database.ExecuteScript(script);
 				}
 
-				_logger.Info("Reverting database to revision {0}...", _targetVersion);
+				_logger.Info("Reverting database to revision {0}...", _globalOptions.TargetRevision);
 
-				foreach (var change in _schemaChangeProvider.GetAllChanges().Reverse().Where(u => u.Version > _targetVersion))
+				foreach (var change in _schemaChangeProvider.GetAllChanges().Reverse().Where(u => u.Version > _globalOptions.TargetRevision))
 				{
 					if (change.NeedsToBeRolledBackFrom(_database))
 					{
 						_logger.Info("Applying rollback for database version {0}...", change.Version);
 						_database.ExecuteRollback(change);
 						_logger.Info("Finished.");
+
+						if (_globalOptions.UseIncrementalTransactions)
+						{
+							_logger.Info("Committing transaction...");
+							scope.Complete();
+							scope.Dispose();
+							scope = BuildTransactionScope();
+							_logger.Info("Done.");
+						}
+
 					}
 				}
 

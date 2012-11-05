@@ -51,12 +51,14 @@
     <Compile Include="AlwaysRun\FileSystemAlwaysRunScriptsProvider.cs" />
     <Compile Include="AlwaysRun\IProvideAlwaysRunScripts.cs" />
     <Compile Include="AlwaysRun\NullAlwaysRunScriptsProvider.cs" />
+    <Compile Include="Core\ConsoleLogger.cs" />
     <Compile Include="Core\NullLogger.cs" />
     <Compile Include="Core\SimpleScript.cs" />
     <Compile Include="ChangeProviders\RebuildLatestVersionDecorator.cs" />
     <Compile Include="Core\ISimpleScript.cs" />
     <Compile Include="Core\ScriptBase.cs" />
     <Compile Include="Databases\NullDatabase.cs" />
+    <Compile Include="Core\SchemaManagerGlobalOptions.cs" />
     <Compile Include="Infrastructure\TransactionmanagerHelper.cs" />
     <Compile Include="Rollback\DatabaseReverter.cs" />
     <Compile Include="Update\DatabaseUpdater.cs" />

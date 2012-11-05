@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -96,6 +95,27 @@ namespace SchemaManager.Tests.Rollback
 			}
 		}
 
+		public class when_rolling_back_and_incremental_commits_is_enabled : given.there_are_rollbacks_available_for_newer_database
+		{
+			protected override void Given()
+			{
+				base.Given();
+				Mocker.Container.GetInstance<SchemaManagerGlobalOptions>().UseIncrementalTransactions = true;
+			}
+
+			protected override void When()
+			{
+				SUT.ApplyRollbacks();
+			}
+
+			[Test]
+			public void then_it_commits_after_each_rollback()
+			{
+				GetMockFor<ILogger>()
+					.Verify(l => l.Info("Committing transaction..."), Times.Once());
+			}
+		}
+
 		public static class given
 		{
 			public abstract class the_default_state : SpecsFor<DatabaseReverter>
@@ -104,8 +124,9 @@ namespace SchemaManager.Tests.Rollback
 				{
 					base.ConfigureContainer(container);
 
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0, 0, 0)));
-					container.Configure(cfg => cfg.For<TimeSpan>().Use(TimeSpan.FromMinutes(30)));
+					var options = SchemaManagerGlobalOptions.Defaults;
+					options.TargetRevision = new DatabaseVersion(0, 0, 0, 0);
+					container.Configure(cfg => cfg.For<SchemaManagerGlobalOptions>().Use(options));
 				}
 
 				protected override void Given()
@@ -165,8 +186,7 @@ namespace SchemaManager.Tests.Rollback
 				{
 					base.ConfigureContainer(container);
 
-					container.Model.EjectAndRemove(typeof(DatabaseVersion));
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(1, 0, 0, 0)));
+					container.GetInstance<SchemaManagerGlobalOptions>().TargetRevision = new DatabaseVersion(1, 0, 0, 0);
 				}
 
 				protected override void Given()

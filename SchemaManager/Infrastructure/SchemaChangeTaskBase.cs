@@ -22,6 +22,8 @@ namespace SchemaManager.Infrastructure
 
 		public int TimeoutMinutes { get; set; }
 
+		public bool UseIncrementalTransactions { get; set; }
+
 		protected SchemaChangeTaskBase()
 		{
 			TimeoutMinutes = 30;
@@ -62,13 +64,19 @@ namespace SchemaManager.Infrastructure
 
 		protected virtual StandardKernel BuildKernel()
 		{
-			var module = new SchemaManagerModule(this, 
-				PathToChangeScripts, 
-				PathToAlwaysRunScripts, 
-				ConnectionString, 
-				_targetRevision, 
-				TimeSpan.FromMinutes(TimeoutMinutes),
-				WhatIf);
+			var options = new SchemaManagerGlobalOptions
+				{
+					TargetRevision = _targetRevision,
+					Timeout = TimeSpan.FromMinutes(TimeoutMinutes),
+					UseIncrementalTransactions = UseIncrementalTransactions,
+					WhatIfEnabled = WhatIf
+				};
+
+			var module = new SchemaManagerModule(this,
+			                                     PathToChangeScripts,
+			                                     PathToAlwaysRunScripts,
+			                                     ConnectionString,
+			                                     options);
 			return new StandardKernel(module);
 		}
 

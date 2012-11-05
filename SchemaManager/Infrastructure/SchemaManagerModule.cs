@@ -17,38 +17,30 @@ namespace SchemaManager.Infrastructure
 		private readonly string _pathToSchemaScripts;
 		private readonly string _connectionString;
 		private readonly string _pathToAlwaysRunScripts;
-		private readonly DatabaseVersion _targetVersion;
-		private readonly TimeSpan _timeout;
-		private readonly bool _whatIf;
+		private readonly SchemaManagerGlobalOptions _globalOptions;
 
 		public SchemaManagerModule(Task owner, 
 			string pathToSchemaScripts, 
 			string pathToAlwaysRunScripts, 
 			string connectionString, 
-			DatabaseVersion targetVersion, 
-			TimeSpan timeout,
-			bool whatIf)
+			SchemaManagerGlobalOptions globalOptions)
 		{
 			_owner = owner;
 			_pathToSchemaScripts = pathToSchemaScripts;
 			_connectionString = connectionString;
 			_pathToAlwaysRunScripts = pathToAlwaysRunScripts;
-			_targetVersion = targetVersion;
-			_timeout = timeout;
-			_whatIf = whatIf;
+			_globalOptions = globalOptions;
 		}
 
 		public override void Load()
 		{
 			Bind<Task>().ToConstant(_owner);
 
-			Bind<IUpdateDatabase>().To<DatabaseUpdater>()
-				.WithConstructorArgument("targetVersion", _targetVersion)
-				.WithConstructorArgument("timeout", _timeout);
+			Bind<SchemaManagerGlobalOptions>().ToConstant(_globalOptions);
 
-			Bind<IRollbackDatabase>().To<DatabaseReverter>()
-				.WithConstructorArgument("targetVersion", _targetVersion)
-				.WithConstructorArgument("timeout", _timeout);
+			Bind<IUpdateDatabase>().To<DatabaseUpdater>();
+
+			Bind<IRollbackDatabase>().To<DatabaseReverter>();
 
 			Bind<ILogger>().To<MSBuildLoggerAdapter>();
 
@@ -71,7 +63,7 @@ namespace SchemaManager.Infrastructure
 				Bind<IProvideAlwaysRunScripts>().To<NullAlwaysRunScriptsProvider>();
 			}
 
-			if (_whatIf)
+			if (_globalOptions.WhatIfEnabled)
 			{
 				Unbind<IDatabase>();
 				Bind<IDatabase>().To<SqlServerDatabase>().WhenInjectedInto<NullDatabase>();

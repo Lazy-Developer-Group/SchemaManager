@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using SchemaManager.AlwaysRun;
 using SchemaManager.ChangeProviders;
@@ -111,6 +110,29 @@ namespace SchemaManager.Tests.Update
 			}
 		}
 
+		public class when_applying_updates_with_incremental_transactions : given.there_are_updates_available_for_out_of_date_database
+		{
+			protected override void Given()
+			{
+				Mocker.Container.GetInstance<SchemaManagerGlobalOptions>().UseIncrementalTransactions = true;
+				base.Given();
+			}
+
+			protected override void When()
+			{
+				SUT.ApplyUpdates();
+			}
+
+			[Test]
+			public void then_it_commits_transactions_incrementally()
+			{
+				//Couldn't come up with a good way to test this without breaking the dependency on TransactionScope.  
+				//That wouldn't be a bad thing, but would take a bit more refactoring than felt necessary...
+				GetMockFor<ILogger>()
+					.Verify(l => l.Info("Committing transaction..."), Times.Once());
+			}
+		}
+
 		public static class given
 		{
 			public abstract class the_default_state : SpecsFor<DatabaseUpdater>
@@ -118,9 +140,7 @@ namespace SchemaManager.Tests.Update
 				protected override void ConfigureContainer(StructureMap.IContainer container)
 				{
 					base.ConfigureContainer(container);
-
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(DatabaseVersion.Max));
-					container.Configure(cfg => cfg.For<TimeSpan>().Use(TimeSpan.FromMinutes(30)));
+					container.Configure(cfg => cfg.For<SchemaManagerGlobalOptions>().Use(SchemaManagerGlobalOptions.Defaults));
 				}
 
 				protected override void Given()
@@ -192,8 +212,7 @@ namespace SchemaManager.Tests.Update
 				{
 					base.ConfigureContainer(container);
 
-					container.Model.EjectAndRemove(typeof (DatabaseVersion));
-					container.Configure(cfg => cfg.For<DatabaseVersion>().Use(new DatabaseVersion(0, 0, 0, 0)));
+					container.GetInstance<SchemaManagerGlobalOptions>().TargetRevision = new DatabaseVersion(0, 0, 0, 0);
 				}
 			}
 		}
